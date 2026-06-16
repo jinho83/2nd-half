@@ -691,8 +691,7 @@
       try {
         const supabaseUrl = 'https://hzixuhcfpnmdqxbvbrdo.supabase.co';
         const supabaseKey = 'sb_publishable_M9qTT7XWGfeX3DeG21mAUg_kx6aBpqj';
-        // 올바른 JWT 형태(eyJ...)의 Key일 경우에만 Supabase 활성화 시도
-        if (supabaseKey && supabaseKey.startsWith('eyJ')) {
+        if (supabaseKey) {
           supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
         }
       } catch (e) {
