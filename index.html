@@ -10,6 +10,8 @@
       padding: 20px;
       background-color: #f3f4f6;
       font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      color: #333333;
+      line-height: 1.43;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,6 +26,25 @@
       max-width: 768px;
       word-break: keep-all;
     }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #1a4f8c;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1a4f8c;
+    }
+    .item-title {
+      color: #1a4f8c;
+      font-weight: 700;
+      font-size: 17px;
+      text-decoration: underline;
+    }
     .bullet-item {
       display: flex;
       align-items: flex-start;
@@ -34,401 +55,457 @@
       flex-shrink: 0;
       color: #333333;
     }
-    .bullet-item .bullet-content {
+    .bullet-content {
+      display: flex;
       flex-grow: 1;
     }
-    .item-title {
+    .bullet-label {
+      flex-shrink: 0;
+      margin-right: 4px;
       color: #1a4f8c;
-      font-weight: 700;
-      font-size: 17px;
-      text-decoration: underline;
+      font-weight: bold;
     }
-    .section-title {
-      font-size: 19px;
+    .sub-info {
+      color: #666;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+    .comparison-table, .eval-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      border-spacing: 0;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+    .comparison-table th, .eval-table th {
+      padding: 4px 6px;
+      text-align: center;
       font-weight: 700;
       color: #1a4f8c;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #1a4f8c;
+      background-color: #f5f8fc;
+      border-bottom: 2px solid #d0dfef;
+      border-right: 1px solid #e0e0e0;
+    }
+    .comparison-table th:last-child, .eval-table th:last-child {
+      border-right: none;
+    }
+    .comparison-table td, .eval-table td {
+      padding: 4px 6px;
+      color: #555;
+      border-bottom: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+    }
+    .comparison-table tr:last-child td, .eval-table tr:last-child td {
+      border-bottom: none;
+    }
+    .comparison-table td:last-child, .eval-table td:last-child {
+      border-right: none;
+    }
+    .table-label-col {
+      text-align: center;
+      color: #1a4f8c;
+      background-color: #fafafa;
+      font-weight: 700;
+      border-right: 1px solid #e0e0e0;
+      vertical-align: middle;
+    }
+    .note-box {
+      margin-top: 4px;
+      padding: 3px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      font-size: 10px;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
   <div class="report-container">
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background: #ffffff; border-collapse: collapse;">
+    <table class="report-table" role="presentation">
+
+      <!-- 상단 헤더 영역 -->
       <tr>
-        <td align="center">
-          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 768px; background: #ffffff; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333333; line-height: 1.43; border-collapse: collapse;">
-
-            <!-- 상단 헤더 영역 -->
-            <tr>
-              <td style="position: relative; background: linear-gradient(180deg, #e8f0f8 0%, #f0f5fa 100%); padding: 0;">
-                <div style="position: relative; min-height: 80px; overflow: hidden;">
-                  <svg viewBox="0 0 768 80" preserveAspectRatio="none" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%;">
-                    <path d="M550,0 L768,0 L768,80 L620,80 Q580,50 550,0 Z" fill="#1a4f8c"></path>
-                    <path d="M600,0 L768,0 L768,65 L650,65 Q620,35 600,0 Z" fill="#2a6faa"></path>
-                    <path d="M650,0 L768,0 L768,45 L690,45 Q670,20 650,0 Z" fill="#5a9fd8"></path>
-                  </svg>
-                  <div style="position: relative; padding: 24px 40px; font-size: 26px; font-weight: 700; color: #1a4f8c; line-height: 1.4; word-break: keep-all;">
-                    '26년 하반기 구매 혁신 및 제도 개편 <span style="font-size: 19px; font-weight: 500; margin-left: 4px;">(7.1. 부)</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <!-- 1. 주요 구매제도 개편 (여백 조정을 위해 상단 패딩을 28px로 조정) -->
-            <tr>
-              <td style="padding: 28px 40px 8px;">
-                <div class="section-title">
-                  1. 주요 구매제도 개편
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding: 8px 40px 8px 56px;">
-                <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px; color: #333333;">
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">① 시장가경쟁 낙찰제 적용 확대</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>시장 변화에 대응한 현장 안전 및 시공 품질 확보용 구매제도 필요</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span><strong>시장가경쟁 낙찰제를 [기존]제철소 內 공사 + [추가]건축 PJT 실내건축&middot;조경&middot;도배로 확대</strong></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">저가 투찰로 인한 부실시공 및 안전 리스크 원천 차단</span>
-                      </span>
-                    </div>
-                    <div style="margin-left: 12px; margin-top: 10px; margin-bottom: 4px;">
-                      <div style="font-size: 13.5px; font-weight: 700; color: #1a4f8c; margin-bottom: 6px;">
-                        ※ 시장가경쟁 낙찰제 vs. 적정가격 낙찰제 비교
-                      </div>
-                      <table style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #e0e0e0; border-radius: 4px; border-spacing: 0;">
-                        <thead>
-                          <tr style="background-color: #f5f8fc; border-bottom: 2px solid #d0dfef;">
-                            <th style="padding: 3px 2px; text-align: center; font-weight: 700; color: #1a4f8c; width: 50px; border-right: 1px solid #e0e0e0;">구분</th>
-                            <th style="padding: 3px 4px; text-align: center; font-weight: 700; color: #1a4f8c; border-right: 1px solid #e0e0e0;">시장가경쟁 낙찰제</th>
-                            <th style="padding: 3px 4px; text-align: center; font-weight: 700; color: #1a4f8c;">적정가격 낙찰제(舊저가제한 낙찰제)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr style="border-bottom: 1px solid #e0e0e0;">
-                            <td style="padding: 3px 2px; text-align: center; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0; font-weight: 700;">대상</td>
-                            <td style="padding: 3px 4px; text-align: center; color: #555; border-right: 1px solid #e0e0e0;">제철소 內 PJT + 건축 PJT 실내건축&middot;조경&middot;도배</td>
-                            <td style="padding: 3px 4px; text-align: center; color: #555;">그 외 모든 PJT</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 3px 2px; text-align: center; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0; font-weight: 700; vertical-align: middle;">낙찰<br>기준</td>
-                            <td style="padding: 3px 4px; color: #555; border-right: 1px solid #e0e0e0; text-align: center;">
-                              <span style="color: #0056b3;">발주예산 內 투찰가 中 기준가<sup>*</sup> 최근접 투찰사</span>
-                              <div style="margin-top: 4px; padding: 3px; background-color: #f8f9fa; border-radius: 4px; font-size: 10px; color: #666;">
-                                <div style="display: inline-block; text-align: left; line-height: 1.4;">
-                                  <span style="float: left;">*기준가 =&nbsp;</span>
-                                  <span style="display: block; overflow: hidden;">
-                                    (발주예산 + 예산內 투찰금액 中 최저가 제외 평균)<br>
-                                    &divide; 2 &times; <span style="color: #d9534f;">93~97%</span> Random 적용
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td style="padding: 3px 4px; color: #555; text-align: center;">
-                              <span style="color: #0056b3;">발주예산 內 투찰가 中 기준가<sup>*</sup> 이상 최저가 투찰사</span>
-                              <div style="margin-top: 4px; padding: 3px; background-color: #f8f9fa; border-radius: 4px; font-size: 10px; color: #666;">
-                                *기준가 = (예산內 투찰금액 中 최저가 제외 평균) &times; <span style="color: #d9534f;">85%</span>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">② 제안형 입찰제 신규 도입</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>현장별 니즈 및 특수여건 반영이 어려운 가격 중심 입찰제도의 한계 극복을 위해<br>가격·역량을 종합 심사하는 혁신적 입찰제도 도입 필요</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span><strong>고위험·고난도 공종 대상 제안형 입찰(제안 50% + 가격 50%) 신규 도입</strong><br>
-                        <span style="color: #666; font-size: 14px;">*협력사 제안에 대한 유관부서 평균점수 + 투찰율에 비례한 가격점수 종합 심사</span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">검증된 우수 파트너십 기반 관리 포인트 최소화 및 현장 생산성 제고</span>
-                      </span>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">③ 하도급계약 성능보증금 전면 폐지</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>공정위 주관 상생협약('26.5.28)에 따른 하도급 성능보증금 폐지 추진</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span>설비기자재 성능 담보 목적의 <strong>기성 유보금(5%) 전면 폐지</strong> 및 이행 보증서 대체<br>
-                        <span style="color: #666; font-size: 14px;">*중소기업 대상, 기존 계약 중 총 50억 원 규모 일시 해제 추진</span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">정부의 대금 유보 관행 폐지 기조 적극 이행 및 상생 실천</span>
-                      </span>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">④ 협력사 수행도평가 체계 개편 ('26.3Q 예정)</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>현장의 평가 부담 및 협력사 의식에 따른 점수 상향평준화 개선</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex; flex-direction: column;">
-                        <span style="display: flex;">
-                          <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                          <span><strong>평가 지표&middot;배점 정비와 확실한 상벌 연계를 통한 변별력 복원</strong></span>
-                        </span>
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 6px; margin-bottom: 4px; font-size: 12px; border: 1px solid #e0e0e0; border-radius: 4px; border-spacing: 0;">
-                          <thead>
-                            <tr style="background-color: #f5f8fc; border-bottom: 2px solid #d0dfef;">
-                              <th style="padding: 2px 4px; text-align: center; font-weight: 700; color: #1a4f8c; width: 125px; border-right: 1px solid #e0e0e0;">구분</th>
-                              <th style="padding: 2px 6px; text-align: center; font-weight: 700; color: #1a4f8c;">주요 개편 내용</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr style="border-bottom: 1px solid #e0e0e0;">
-                              <td style="padding: 2px 4px; text-align: center; font-weight: 700; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0;">문항&middot;배점 최적화</td>
-                              <td style="padding: 2px 6px; color: #555;">평가 문항 수 축소, 복잡한 증빙 평가 문항 제거, 최저점 하향, 점수 스케일 조정</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #e0e0e0;">
-                              <td style="padding: 2px 4px; text-align: center; font-weight: 700; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0;">공정&middot;투명성 강화</td>
-                              <td style="padding: 2px 6px; color: #555;">평가자 사전교육 실시, 협력사에 수행도평가 결과 공종별 등수 피드백</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #e0e0e0;">
-                              <td style="padding: 2px 4px; text-align: center; font-weight: 700; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0;">우수업체 우대</td>
-                              <td style="padding: 2px 6px; color: #555;">생산성&middot;안전 우수PHP 신설, 최우수PHP 공종 추가(실내건축), 우수PM 보유 협력사 가점 부여</td>
-                            </tr>
-                            <tr>
-                              <td style="padding: 2px 4px; text-align: center; font-weight: 700; color: #1a4f8c; background-color: #fafafa; border-right: 1px solid #e0e0e0;">등록취소 요건 강화</td>
-                              <td style="padding: 2px 6px; color: #555;">평가 하위 15% 2회 &rarr; 20% 2회, 안전 하위 5% 2회 &rarr; 10% 2회, 무실적 3년 &rarr; 2년</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">우수업체와 열위업체 변별력 강화를 통한 협력사 POOL 정예화</span>
-                      </span>
-                    </div>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-
-            <!-- 2. 계약 투명성 및 리스크 관리 강화 -->
-            <tr>
-              <td style="padding: 16px 40px 8px;">
-                <div class="section-title">
-                  2. 계약 투명성 및 리스크 관리 강화
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding: 8px 40px 8px 56px;">
-                <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px; color: #333333;">
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">⑤ 현장 소액 수의계약 현황 점검 및 관리 개선</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>업무 간소화 차원에서 한도금액 초과 변경계약 시 구매부서장 합의 폐지('25.8월) 후,<br>한도 초과 계약 폭증(월 7→42건)</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span><strong>한도 초과 계약 모니터링 및 팝업 안내를 통한 자율 준수 환경 조성</strong><br>
-                        <span style="color: #666; font-size: 14px;">[1단계] AI 실시간 감지, 품의 상단 '한도 초과' 경고 표기, 분할발주 방지 확약 도입<br>
-                        [2단계] 직전 3개월간 월 10건 이상 초과 지속 시 '구매부서장 합의제'로 원복 검토</span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">현장 자율성은 존중하되, 무분별한 한도 초과 계약 선제적 차단</span>
-                      </span>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">⑥ 발주처 지정 수의계약 검증체계 강화</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>발주처 지정 수의 증가(5.8&rarr;13%)에 따른 수의 적정성 검토 강화 필요</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span>계약규정상 수의심의 대상에서 제외되던 발주처 지정 수의계약 중<br><strong>공사 100억원 초과 발주처 지정 수의계약 수의심의 의무화</strong><br>
-                        <span style="color: #666; font-size: 14px;">*수의심의 검증항목 강화 및 전문 심의위원 (사업기획&middot;견적 부서장) 추가</span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">전사 유관부서의 면밀하고 종합적인 검증을 통해 사업수행 투명성 강화</span>
-                      </span>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 10px;">
-                    <span class="item-title">⑦ 협력사 입찰담합 방지 및 피해예방 조치</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>포스코홀딩스 주관 선제적 담합피해예방체계 마련에 동참</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span>투찰 시 <strong>'독자적 입찰결정 증명서' 제출</strong> 시스템화 및 특별약관을 통한 <strong>확정 위약금 명문화</strong><br>
-                        <span style="color: #666; font-size: 14px;">*위약금 기준 : 입찰참여자 입찰금액 5% / 최종 낙찰자 계약금액 10% 부과</span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">담합 행위 사전 예방 및 당사 손해액 산정&middot;입증 한계 극복</span>
-                      </span>
-                    </div>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-
-            <!-- 3. 구매 AX 디지털 혁신 -->
-            <tr>
-              <td style="padding: 16px 40px 8px;">
-                <div class="section-title">
-                  3. 구매 AX 디지털 혁신
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding: 8px 40px 40px 56px;">
-                <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px; color: #333333;">
-                  <li style="margin-bottom: 18px;">
-                    <span class="item-title">⑧ 협력업체 발굴 AI Agent 개발</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>특수 실적사 발굴 제한, 수작업 비효율, 공공데이터 접근 한계</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span>프로젝트 핵심 <strong>키워드 입력</strong> &rarr; 나라장터 등 <strong>공공입찰 데이터 실시간 통합 매칭</strong><br>&rarr; AI 정량 점수 연산 &rarr; E-pro 전송 및 <strong>최적업체 추천</strong><br>
-                        <span style="color: #666; font-size: 14px;">※ URL : <a href="http://searchvendor.apps.poscoenc.com/vendors" target="_blank" style="color: #666; text-decoration: underline;">searchvendor.apps.poscoenc.com/vendors</a></span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">수동 검색 프로세스 완전 자동화로 업무 소요 시간 단축 (수일 &rarr; 5~10분)</span>
-                      </span>
-                    </div>
-                  </li>
-                  <li style="margin-bottom: 10px;">
-                    <span class="item-title">⑨ 구매 데이터마트 및 분석 AI 솔루션 도입 (7.E 예정)</span><br>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">배경 :</span>
-                        <span>수동 데이터 추출 구조로 인한 의사결정 지연 ('25년 약 130건)</span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">내용 :</span>
-                        <span>계약&middot;보증&middot;기성&middot;협력사 리스크 <strong>데이터를 즉시 검색&middot;분석하는 대화형 AI 체계 구축</strong><br>(기존 IT 부서 데이터 추출 의뢰 구조 탈피)<br>
-                        <span style="color: #666; font-size: 14px;">※ URL : <a href="https://aias-epro.apps.poscoenc.com" target="_blank" style="color: #666; text-decoration: underline;">https://aias-epro.apps.poscoenc.com</a></span></span>
-                      </span>
-                    </div>
-                    <div class="bullet-item">
-                      <span class="bullet">-</span>
-                      <span class="bullet-content" style="display: flex;">
-                        <span style="flex-shrink: 0; margin-right: 4px; color: #1a4f8c;">효과 :</span>
-                        <span style="color: #333333;">중간 가공 없는 즉시 쿼리로 실무 생산성 향상 및 리스크 대응력 강화</span>
-                      </span>
-                    </div>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-
-            <!-- 하단 부서 표시 영역 -->
-            <tr>
-              <td align="center" style="padding: 0 40px 32px; font-size: 19px; color: #1a4f8c; font-weight: 700;">
-                경영혁신본부 구매계약실
-              </td>
-            </tr>
-
-          </table>
+        <td style="position: relative; background: linear-gradient(180deg, #e8f0f8 0%, #f0f5fa 100%); padding: 0;">
+          <div style="position: relative; min-height: 80px; overflow: hidden;">
+            <svg viewBox="0 0 768 80" preserveAspectRatio="none" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%;">
+              <path d="M550,0 L768,0 L768,80 L620,80 Q580,50 550,0 Z" fill="#1a4f8c"></path>
+              <path d="M600,0 L768,0 L768,65 L650,65 Q620,35 600,0 Z" fill="#2a6faa"></path>
+              <path d="M650,0 L768,0 L768,45 L690,45 Q670,20 650,0 Z" fill="#5a9fd8"></path>
+            </svg>
+            <div style="position: relative; padding: 24px 40px; font-size: 26px; font-weight: 700; color: #1a4f8c; line-height: 1.4;">
+              '26년 하반기 구매 혁신 및 제도 개편 <span style="font-size: 19px; font-weight: 500; margin-left: 4px;">(7.1. 부)</span>
+            </div>
+          </div>
         </td>
       </tr>
+
+      <!-- 1. 주요 구매제도 개편 -->
+      <tr>
+        <td style="padding: 28px 40px 8px;">
+          <div class="section-title">
+            1. 주요 구매제도 개편
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="padding: 8px 40px 8px 56px;">
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px;">
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">① 시장가경쟁 낙찰제 적용 확대</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>시장 변화에 대응한 현장 안전 및 시공 품질 확보용 구매제도 필요</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span><strong>시장가경쟁 낙찰제를 [기존]제철소 內 공사 + [추가]건축 PJT 실내건축&middot;조경&middot;도배로 확대</strong></span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>저가 투찰로 인한 부실시공 및 안전 리스크 원천 차단</span>
+                </span>
+              </div>
+              <div style="margin-left: 12px; margin-top: 10px; margin-bottom: 4px;">
+                <div style="font-size: 13.5px; font-weight: 700; color: #1a4f8c; margin-bottom: 6px;">
+                  ※ 시장가경쟁 낙찰제 vs. 적정가격 낙찰제 비교
+                </div>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">구분</th>
+                      <th>시장가경쟁 낙찰제</th>
+                      <th>적정가격 낙찰제(舊저가제한 낙찰제)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="table-label-col">대상</td>
+                      <td style="text-align: center;">제철소 內 PJT + 건축 PJT 실내건축&middot;조경&middot;도배</td>
+                      <td style="text-align: center;">그 외 모든 PJT</td>
+                    </tr>
+                    <tr>
+                      <td class="table-label-col">낙찰<br>기준</td>
+                      <td style="text-align: center;">
+                        <span style="color: #0056b3;">발주예산 內 투찰가 中 기준가<sup>*</sup> 최근접 투찰사</span>
+                        <div class="note-box">
+                          <div style="display: inline-block; text-align: left; line-height: 1.4;">
+                            <span style="float: left;">*기준가 =&nbsp;</span>
+                            <span style="display: block; overflow: hidden;">
+                              (발주예산 + 예산內 투찰금액 中 최저가 제외 평균)<br>
+                              &divide; 2 &times; <span style="color: #d9534f;">93~97%</span> Random 적용
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td style="text-align: center;">
+                        <span style="color: #0056b3;">발주예산 內 투찰가 中 기준가<sup>*</sup> 이상 최저가 투찰사</span>
+                        <div class="note-box">
+                          *기준가 = (예산內 투찰금액 中 최저가 제외 평균) &times; <span style="color: #d9534f;">85%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">② 제안형 입찰제 신규 도입</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>현장별 니즈 및 특수여건 반영이 어려운 가격 중심 입찰제도의 한계 극복을 위해 가격·역량을 종합 심사하는 혁신적 입찰제도 도입 필요</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    <strong>고위험·고난도 공종 대상 제안형 입찰(제안 50% + 가격 50%) 신규 도입</strong><br>
+                    <span class="sub-info">*협력사 제안에 대한 유관부서 평균점수 + 투찰율에 비례한 가격점수 종합 심사</span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>검증된 우수 파트너십 기반 관리 포인트 최소화 및 현장 생산성 제고</span>
+                </span>
+              </div>
+            </li>
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">③ 하도급계약 성능보증금 전면 폐지</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>공정위 주관 상생협약('26.5.28)에 따른 하도급 성능보증금 폐지 추진</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    설비기자재 성능 담보 목적의 <strong>기성 유보금(5%) 전면 폐지</strong> 및 이행 보증서 대체<br>
+                    <span class="sub-info">*중소기업 대상, 기존 계약 중 총 50억 원 규모 일시 해제 추진</span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>정부의 대금 유보 관행 폐지 기조 적극 이행 및 상생 실천</span>
+                </span>
+              </div>
+            </li>
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">④ 협력사 수행도평가 체계 개편 ('26.3Q 예정)</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>현장의 평가 부담 및 협력사 의식에 따른 점수 상향평준화 개선</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content" style="flex-direction: column;">
+                  <span style="display: flex;">
+                    <span class="bullet-label">내용 :</span>
+                    <span><strong>평가 지표&middot;배점 정비와 확실한 상벌 연계를 통한 변별력 복원</strong></span>
+                  </span>
+                  <table class="eval-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 125px;">구분</th>
+                        <th>주요 개편 내용</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="table-label-col">문항&middot;배점 최적화</td>
+                        <td>평가 문항 수 축소, 복잡한 증빙 평가 문항 제거, 최저점 하향, 점수 스케일 조정</td>
+                      </tr>
+                      <tr>
+                        <td class="table-label-col">공정&middot;투명성 강화</td>
+                        <td>평가자 사전교육 실시, 협력사에 수행도평가 결과 공종별 등수 피드백</td>
+                      </tr>
+                      <tr>
+                        <td class="table-label-col">우수업체 우대</td>
+                        <td>생산성&middot;안전 우수PHP 신설, 최우수PHP 공종 추가(실내건축), 우수PM 보유 협력사 가점 부여</td>
+                      </tr>
+                      <tr>
+                        <td class="table-label-col">등록취소 요건 강화</td>
+                        <td>평가 하위 15% 2회 &rarr; 20% 2회, 안전 하위 5% 2회 &rarr; 10% 2회, 무실적 3년 &rarr; 2년</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>우수업체와 열위업체 변별력 강화를 통한 협력사 POOL 정예화</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+      <!-- 2. 계약 투명성 및 리스크 관리 강화 -->
+      <tr>
+        <td style="padding: 16px 40px 8px;">
+          <div class="section-title">
+            2. 계약 투명성 및 리스크 관리 강화
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="padding: 8px 40px 8px 56px;">
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px;">
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">⑤ 현장 소액 수의계약 현황 점검 및 관리 개선</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>업무 간소화 차원에서 한도금액 초과 변경계약 시 구매부서장 합의 폐지('25.8월) 후, 한도 초과 계약 폭증(월 7→42건)</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    <strong>한도 초과 계약 모니터링 및 팝업 안내를 통한 자율 준수 환경 조성</strong><br>
+                    <span class="sub-info">[1단계] AI 실시간 감지, 품의 상단 '한도 초과' 경고 표기, 분할발주 방지 확약 도입<br>
+                    [2단계] 직전 3개월간 월 10건 이상 초과 지속 시 '구매부서장 합의제'로 원복 검토</span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>현장 자율성은 존중하되, 무분별한 한도 초과 계약 선제적 차단</span>
+                </span>
+              </div>
+            </li>
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">⑥ 발주처 지정 수의계약 검증체계 강화</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>발주처 지정 수의 증가(5.8&rarr;13%)에 따른 수의 적정성 검토 강화 필요</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    계약규정상 수의심의 대상에서 제외되던 발주처 지정 수의계약 중 <strong>공사 100억원 초과 발주처 지정 수의계약 수의심의 의무화</strong><br>
+                    <span class="sub-info">*수의심의 검증항목 강화 및 전문 심의위원 (사업기획&middot;견적 부서장) 추가</span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>전사 유관부서의 면밀하고 종합적인 검증을 통해 사업수행 투명성 강화</span>
+                </span>
+              </div>
+            </li>
+            <li style="margin-bottom: 10px;">
+              <span class="item-title">⑦ 협력사 입찰담합 방지 및 피해예방 조치</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>포스코홀딩스 주관 선제적 담합피해예방체계 마련에 동참</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    투찰 시 <strong>'독자적 입찰결정 증명서' 제출</strong> 시스템화 및 특별약관을 통한 <strong>확정 위약금 명문화</strong><br>
+                    <span class="sub-info">*위약금 기준 : 입찰참여자 입찰금액 5% / 최종 낙찰자 계약금액 10% 부과</span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>담합 행위 사전 예방 및 당사 손해액 산정&middot;입증 한계 극복</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+      <!-- 3. 구매 AX 디지털 혁신 -->
+      <tr>
+        <td style="padding: 16px 40px 8px;">
+          <div class="section-title">
+            3. 구매 AX 디지털 혁신
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="padding: 8px 40px 40px 56px;">
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 15px;">
+            <li style="margin-bottom: 18px;">
+              <span class="item-title">⑧ 협력업체 발굴 AI Agent 개발</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>특수 실적사 발굴 제한, 수작업 비효율, 공공데이터 접근 한계</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    프로젝트 핵심 <strong>키워드 입력</strong> &rarr; 나라장터 등 <strong>공공입찰 데이터 실시간 통합 매칭</strong> &rarr; AI 정량 점수 연산 &rarr; E-pro 전송 및 <strong>최적업체 추천</strong><br>
+                    <span class="sub-info">※ URL : <a href="http://searchvendor.apps.poscoenc.com/vendors" target="_blank" style="color: #666; text-decoration: underline;">searchvendor.apps.poscoenc.com/vendors</a></span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>수동 검색 프로세스 완전 자동화로 업무 소요 시간 단축 (수일 &rarr; 5~10분)</span>
+                </span>
+              </div>
+            </li>
+            <li style="margin-bottom: 10px;">
+              <span class="item-title">⑨ 구매 데이터마트 및 분석 AI 솔루션 도입 (7.E 예정)</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>수동 데이터 추출 구조로 인한 의사결정 지연 ('25년 약 130건)</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span>
+                    계약&middot;보증&middot;기성&middot;협력사 리스크 <strong>데이터를 즉시 검색&middot;분석하는 대화형 AI 체계 구축</strong> (기존 IT 부서 데이터 추출 의뢰 구조 탈피)<br>
+                    <span class="sub-info">※ URL : <a href="https://aias-epro.apps.poscoenc.com" target="_blank" style="color: #666; text-decoration: underline;">https://aias-epro.apps.poscoenc.com</a></span>
+                  </span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>중간 가공 없는 즉시 쿼리로 실무 생산성 향상 및 리스크 대응력 강화</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+      <!-- 하단 부서 표시 영역 -->
+      <tr>
+        <td align="center" style="padding: 0 40px 32px; font-size: 19px; color: #1a4f8c; font-weight: 700;">
+          경영혁신본부 구매계약실
+        </td>
+      </tr>
+
     </table>
   </div>
 
