@@ -673,12 +673,7 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Supabase 초기화
-      const supabaseUrl = 'https://hzixuhcfpnmdqxbvbrdo.supabase.co';
-      const supabaseKey = 'sb_publishable_M9qTT7XWGfeX3DeG21mAUg_kx6aBpqj';
-      const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
+    document.addEventListener('DOMContentLoaded', () => {
       const btnToggleEdit = document.getElementById('btnToggleEdit');
       const btnSave = document.getElementById('btnSave');
       const editStatus = document.getElementById('editStatus');
@@ -687,37 +682,56 @@
       const textColorPicker = document.getElementById('textColorPicker');
       
       const container = document.querySelector('.report-container');
-      
-      // 로컬에 내장된 기본 템플릿을 기억해 둡니다. (최초 동기화용)
       const defaultHTML = container.innerHTML;
       
-      // 로딩 표시용 상태
-      editStatus.innerText = '동기화 중...';
-      
-      // 1. Supabase에서 최신 HTML 불러오기
+      let supabaseClient = null;
+      let isSupabaseOnline = false;
+
+      // Supabase 초기화 시도
       try {
-        const { data, error } = await supabaseClient
-          .from('documents')
-          .select('html_content')
-          .eq('id', 1)
-          .single();
-          
-        if (error || !data || data.html_content.includes('초기화중...')) {
-          // 데이터가 비었거나 초기화 문구면, 로컬의 기본 서식을 DB에 최초 등록(Upsert)
-          await supabaseClient
-            .from('documents')
-            .upsert({ id: 1, html_content: defaultHTML });
-          console.log('초기 서식이 Supabase에 등록되었습니다.');
-          editStatus.innerText = '보기 모드';
-        } else {
-          // 최신 내용 반영
-          container.innerHTML = data.html_content;
-          editStatus.innerText = '보기 모드';
+        const supabaseUrl = 'https://hzixuhcfpnmdqxbvbrdo.supabase.co';
+        const supabaseKey = 'sb_publishable_M9qTT7XWGfeX3DeG21mAUg_kx6aBpqj';
+        // 올바른 JWT 형태(eyJ...)의 Key일 경우에만 Supabase 활성화 시도
+        if (supabaseKey && supabaseKey.startsWith('eyJ')) {
+          supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
         }
-      } catch (err) {
-        console.error('Supabase 연동 실패:', err);
-        editStatus.innerText = '동기화 실패 (로컬 모드)';
+      } catch (e) {
+        console.warn('Supabase 초기화 실패, 로컬 모드로 동작합니다.', e);
       }
+
+      // 비동기 데이터 로딩 함수 (화면 렌더링 차단 없음)
+      async function loadInitialData() {
+        if (!supabaseClient) {
+          editStatus.innerText = '로컬 모드 (편집 가능)';
+          return;
+        }
+        editStatus.innerText = '동기화 중...';
+        try {
+          const { data, error } = await supabaseClient
+            .from('documents')
+            .select('html_content')
+            .eq('id', 1)
+            .single();
+            
+          if (error) throw error;
+          
+          if (!data || data.html_content.includes('초기화중...')) {
+            await supabaseClient
+              .from('documents')
+              .upsert({ id: 1, html_content: defaultHTML });
+            editStatus.innerText = '보기 모드';
+          } else {
+            container.innerHTML = data.html_content;
+            editStatus.innerText = '보기 모드';
+          }
+          isSupabaseOnline = true;
+        } catch (err) {
+          console.warn('Supabase 데이터 로드 실패, 로컬 모드로 전환합니다.', err);
+          editStatus.innerText = '로컬 모드';
+        }
+      }
+      
+      loadInitialData();
 
       // 서식 버튼 이벤트 리스너 추가
       document.getElementById('btnBold').addEventListener('click', () => document.execCommand('bold', false, null));
@@ -758,41 +772,55 @@
         btnToggleEdit.style.backgroundColor = '#1a4f8c';
         btnSave.style.display = 'none';
         formatToolbar.style.display = 'none';
-        editStatus.innerText = '보기 모드';
+        editStatus.innerText = isSupabaseOnline ? '보기 모드' : '로컬 모드';
         editStatus.style.color = '#666';
         isEditing = false;
       }
       
       btnSave.addEventListener('click', async () => {
-        // 편집을 비활성화해서 contenteditable 속성이 제거된 상태의 깨끗한 HTML을 만듦
         disableEditing();
         
-        editStatus.innerText = '저장 중...';
-        btnSave.disabled = true;
-        btnSave.querySelector('span').innerText = '저장 중...';
-        
-        try {
-          // 현재 컨테이너 내부의 HTML 변경점만 업데이트
-          const currentHTML = container.innerHTML;
+        if (isSupabaseOnline && supabaseClient) {
+          editStatus.innerText = '저장 중...';
+          btnSave.disabled = true;
+          btnSave.querySelector('span').innerText = '저장 중...';
           
-          const { error } = await supabaseClient
-            .from('documents')
-            .update({ html_content: currentHTML, updated_at: new Date() })
-            .eq('id', 1);
-            
-          if (error) throw error;
-          
-          alert('수정된 내용이 Supabase 데이터베이스에 안전하게 자동 저장되었습니다!');
-          editStatus.innerText = '보기 모드';
-        } catch (err) {
-          console.error('저장 실패:', err);
-          alert('데이터베이스 저장에 실패했습니다. 네트워크 상태 및 Supabase 설정을 확인해 주세요.');
-          editStatus.innerText = '저장 실패';
-        } finally {
-          btnSave.disabled = false;
-          btnSave.querySelector('span').innerText = '저장하기';
+          try {
+            const currentHTML = container.innerHTML;
+            const { error } = await supabaseClient
+              .from('documents')
+              .update({ html_content: currentHTML, updated_at: new Date() })
+              .eq('id', 1);
+              
+            if (error) throw error;
+            alert('수정된 내용이 Supabase 데이터베이스에 안전하게 자동 저장되었습니다!');
+            editStatus.innerText = '보기 모드';
+          } catch (err) {
+            console.error('저장 실패:', err);
+            alert('데이터베이스 저장 실패! 대신 파일 다운로드 모드로 저장합니다.');
+            saveAsFile();
+          } finally {
+            btnSave.disabled = false;
+            btnSave.querySelector('span').innerText = '저장하기';
+          }
+        } else {
+          saveAsFile();
         }
       });
+
+      function saveAsFile() {
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('현재 로컬 모드(오프라인)로 동작 중입니다. 수정된 내용을 index.html 파일로 다운로드했으니 기존 파일에 덮어씌워 보관해 주세요.');
+      }
     });
   </script>
 </body>
