@@ -686,6 +686,10 @@
       
       let supabaseClient = null;
       let isSupabaseOnline = false;
+      
+      // 변경 이탈 감지용 변수
+      let isEditing = false;
+      let originalHTML = '';
 
       // Supabase 초기화 시도
       try {
@@ -698,7 +702,7 @@
         console.warn('Supabase 초기화 실패, 로컬 모드로 동작합니다.', e);
       }
 
-      // 비동기 데이터 로딩 함수 (화면 렌더링 차단 없음)
+      // 비동기 데이터 로딩 함수 (가장 최근 이력 불러오기)
       async function loadInitialData() {
         if (!supabaseClient) {
           editStatus.innerText = '로컬 모드 (편집 가능)';
@@ -706,21 +710,23 @@
         }
         editStatus.innerText = '동기화 중...';
         try {
+          // document_history 테이블에서 가장 최신 데이터 1건 조회
           const { data, error } = await supabaseClient
-            .from('documents')
+            .from('document_history')
             .select('html_content')
-            .eq('id', 1)
-            .single();
+            .order('created_at', { ascending: false })
+            .limit(1);
             
           if (error) throw error;
           
-          if (!data || data.html_content.includes('초기화중...')) {
+          if (!data || data.length === 0 || data[0].html_content.includes('초기화중...')) {
+            // 이력이 전혀 없거나 기본 초기화 상태이면, 현재 로컬 템플릿을 최초 이력으로 등록
             await supabaseClient
-              .from('documents')
-              .upsert({ id: 1, html_content: defaultHTML });
+              .from('document_history')
+              .insert({ modifier_name: 'System', html_content: defaultHTML });
             editStatus.innerText = '보기 모드';
           } else {
-            container.innerHTML = data.html_content;
+            container.innerHTML = data[0].html_content;
             editStatus.innerText = '보기 모드';
           }
           isSupabaseOnline = true;
@@ -746,11 +752,11 @@
         document.execCommand('foreColor', false, e.target.value);
       });
       
-      let isEditing = false;
-      
-      btnToggleEdit.addEventListener('click', () => {
-        isEditing = !isEditing;
-        if (isEditing) {
+      btnToggleEdit.addEventListener('click', async () => {
+        if (!isEditing) {
+          // 편집 시작
+          originalHTML = container.innerHTML;
+          isEditing = true;
           document.body.classList.add('editing-active');
           container.setAttribute('contenteditable', 'true');
           btnToggleEdit.querySelector('span').innerText = '편집 종료';
@@ -760,6 +766,17 @@
           editStatus.innerText = '편집 모드';
           editStatus.style.color = '#d9534f';
         } else {
+          // 편집 종료 요청 시 변경사항 감지
+          if (container.innerHTML !== originalHTML) {
+            const wantSave = confirm('수정된 내용이 있습니다. 저장하고 편집을 종료하시겠습니까?\n\n(확인: 저장하고 종료 / 취소: 저장하지 않고 변경사항 파기)');
+            if (wantSave) {
+              const savedSuccessfully = await saveDocument();
+              if (!savedSuccessfully) return; // 저장 실패/취소 시 화면 상태 유지
+            } else {
+              // 변경 취소 시 원래 상태로 롤백
+              container.innerHTML = originalHTML;
+            }
+          }
           disableEditing();
         }
       });
@@ -776,8 +793,17 @@
         isEditing = false;
       }
       
-      btnSave.addEventListener('click', async () => {
-        disableEditing();
+      // 저장 비즈니스 로직 함수
+      async function saveDocument() {
+        // 수정자 이름 입력받기
+        const modifierNameInput = prompt('수정하신 분의 이름을 입력해 주세요 (이력 관리에 등록됩니다):', '');
+        if (modifierNameInput === null) {
+          // 취소 버튼 누름
+          return false;
+        }
+        
+        const modifierName = modifierNameInput.trim() || '이름없음';
+        const currentHTML = container.innerHTML;
         
         if (isSupabaseOnline && supabaseClient) {
           editStatus.innerText = '저장 중...';
@@ -785,30 +811,52 @@
           btnSave.querySelector('span').innerText = '저장 중...';
           
           try {
-            const currentHTML = container.innerHTML;
+            // 이력 관리를 위해 document_history 테이블에 새로운 로그 행을 추가(insert)
             const { error } = await supabaseClient
-              .from('documents')
-              .update({ html_content: currentHTML, updated_at: new Date() })
-              .eq('id', 1);
+              .from('document_history')
+              .insert({
+                modifier_name: modifierName,
+                html_content: currentHTML
+              });
               
             if (error) throw error;
-            alert('수정된 내용이 Supabase 데이터베이스에 안전하게 자동 저장되었습니다!');
+            
+            alert('수정된 내용과 작성자 이력이 Supabase 데이터베이스에 안전하게 자동 저장되었습니다!');
             editStatus.innerText = '보기 모드';
+            originalHTML = currentHTML; // 저장 완료 시 기준 시점 업데이트
+            return true;
           } catch (err) {
             console.error('저장 실패:', err);
             alert('데이터베이스 저장 실패! 대신 파일 다운로드 모드로 저장합니다.');
-            saveAsFile();
+            saveAsFile(currentHTML);
+            return true;
           } finally {
             btnSave.disabled = false;
             btnSave.querySelector('span').innerText = '저장하기';
           }
         } else {
-          saveAsFile();
+          saveAsFile(currentHTML);
+          return true;
+        }
+      }
+      
+      btnSave.addEventListener('click', async () => {
+        const saved = await saveDocument();
+        if (saved) {
+          disableEditing();
         }
       });
 
-      function saveAsFile() {
-        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      function saveAsFile(htmlToSave) {
+        // 저장 시 contenteditable 등을 임시 제거하고 깨끗한 html 구성
+        const clone = document.documentElement.cloneNode(true);
+        const cloneContainer = clone.querySelector('.report-container');
+        if (cloneContainer) {
+          cloneContainer.removeAttribute('contenteditable');
+        }
+        clone.body.classList.remove('editing-active');
+        
+        const htmlContent = '<!DOCTYPE html>\n' + clone.outerHTML;
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -819,7 +867,17 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         alert('현재 로컬 모드(오프라인)로 동작 중입니다. 수정된 내용을 index.html 파일로 다운로드했으니 기존 파일에 덮어씌워 보관해 주세요.');
+        
+        originalHTML = htmlToSave; // 저장 시점 동기화
       }
+      
+      // 페이지 이탈 경고 (브라우저 종료 및 새로고침 차단)
+      window.addEventListener('beforeunload', (e) => {
+        if (isEditing && container.innerHTML !== originalHTML) {
+          e.preventDefault();
+          e.returnValue = ''; // 브라우저 표준 경고 띄움
+        }
+      });
     });
   </script>
 </body>
