@@ -788,6 +788,22 @@
       
       btnToggleEdit.addEventListener('click', async () => {
         if (!isEditing) {
+          // 비밀번호 확인
+          const passwordInput = prompt('편집하려면 비밀번호를 입력하세요:', '');
+          if (passwordInput === null) return; // 취소
+          
+          // SHA-256 해시 비교
+          const msgBuffer = new TextEncoder().encode(passwordInput.trim());
+          const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          
+          const correctHash = '10c98062ec3898a9c53faec297817388633136c59e3611517ffef580fd1d16de'; // 'poscoenc'의 SHA-256 해시
+          if (hashHex !== correctHash) {
+            alert('비밀번호가 올바르지 않습니다.');
+            return;
+          }
+
           // 편집 시작
           originalHTML = container.innerHTML;
           isEditing = true;
