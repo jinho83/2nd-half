@@ -682,12 +682,17 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
       <span>저장하기</span>
     </button>
+    <button class="edit-btn" id="btnDownload" style="background-color: #17a2b8; color: white; display: none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span>다운로드</span>
+    </button>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const btnToggleEdit = document.getElementById('btnToggleEdit');
       const btnSave = document.getElementById('btnSave');
+      const btnDownload = document.getElementById('btnDownload');
       const editStatus = document.getElementById('editStatus');
       const editPanel = document.getElementById('editPanel');
       const formatToolbar = document.getElementById('formatToolbar');
@@ -791,6 +796,7 @@
           btnToggleEdit.querySelector('span').innerText = '편집 종료';
           btnToggleEdit.style.backgroundColor = '#6c757d';
           btnSave.style.display = 'flex';
+          btnDownload.style.display = 'flex';
           formatToolbar.style.display = 'flex';
           editStatus.innerText = '편집 모드';
           editStatus.style.color = '#d9534f';
@@ -816,6 +822,7 @@
         btnToggleEdit.querySelector('span').innerText = '편집 시작';
         btnToggleEdit.style.backgroundColor = '#1a4f8c';
         btnSave.style.display = 'none';
+        btnDownload.style.display = 'none';
         formatToolbar.style.display = 'none';
         editStatus.innerText = isSupabaseOnline ? '보기 모드' : '로컬 모드';
         editStatus.style.color = '#666';
@@ -874,6 +881,10 @@
         if (saved) {
           disableEditing();
         }
+      });
+
+      btnDownload.addEventListener('click', () => {
+        saveAsFile(container.innerHTML);
       });
 
       function saveAsFile(htmlToSave) {
