@@ -284,21 +284,19 @@
                 <span class="bullet">-</span>
                 <span class="bullet-content">
                   <span class="bullet-label">배경 :</span>
-                  <span>시장 변화에 대응한 현장 안전 및 시공 품질 확보용 구매제도 필요</span>
+                  <span>협력사 적정가격 보장으로 현장 안전 및 품질 확보</span>
                 </span>
               </div>
               <div class="bullet-item">
                 <span class="bullet">-</span>
                 <span class="bullet-content">
                   <span class="bullet-label">내용 :</span>
-                  <span><strong>시장가경쟁 낙찰제를 [기존]제철소 內 공사 + [추가]건축 PJT 실내건축&middot;조경&middot;도배로 확대</strong></span>
+                  <span>[기존] 제철소 內 공사에만 적용 중인 시장가경쟁 낙찰제를 [추가] 건축 PJT 3개 공종(실내건축, 조경, 도배)으로 확대 (시범적용)</span>
                 </span>
               </div>
-              <div class="bullet-item">
-                <span class="bullet">-</span>
-                <span class="bullet-content">
-                  <span class="bullet-label">효과 :</span>
-                  <span>저가 투찰로 인한 부실시공 및 안전 리스크 원천 차단</span>
+              <div class="bullet-item" style="margin-top: 6px;">
+                <span class="bullet-content" style="color: #0025fa; font-weight: bold; padding-left: 2px;">
+                  ☞ 저가 투찰로 인한 부실시공 및 안전 리스크 원천 차단
                 </span>
               </div>
               <div style="margin-left: 12px; margin-top: 10px; margin-bottom: 4px;">
@@ -719,6 +717,31 @@
             
           if (error) throw error;
           
+          const oldDefaultHTML = `              <span class="item-title">① 시장가경쟁 낙찰제 적용 확대</span><br>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">배경 :</span>
+                  <span>시장 변화에 대응한 현장 안전 및 시공 품질 확보용 구매제도 필요</span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">내용 :</span>
+                  <span><strong>시장가경쟁 낙찰제를 [기존]제철소 內 공사 + [추가]건축 PJT 실내건축&middot;조경&middot;도배로 확대</strong></span>
+                </span>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet">-</span>
+                <span class="bullet-content">
+                  <span class="bullet-label">효과 :</span>
+                  <span>저가 투찰로 인한 부실시공 및 안전 리스크 원천 차단</span>
+                </span>
+              </div>`;
+
+          const hasLocalModifications = !defaultHTML.includes(oldDefaultHTML);
+
           if (!data || data.length === 0 || data[0].html_content.includes('초기화중...')) {
             // 이력이 전혀 없거나 기본 초기화 상태이면, 현재 로컬 템플릿을 최초 이력으로 등록
             await supabaseClient
@@ -726,7 +749,17 @@
               .insert({ modifier_name: 'System', html_content: defaultHTML });
             editStatus.innerText = '보기 모드';
           } else {
-            container.innerHTML = data[0].html_content;
+            // 로컬 코드 수정사항이 있는 경우 DB 내용을 로컬 수정본으로 강제 업데이트하고 동기화
+            if (hasLocalModifications && data[0].html_content.includes(oldDefaultHTML)) {
+              await supabaseClient
+                .from('document_history')
+                .insert({ modifier_name: 'System (Local Code Update)', html_content: defaultHTML });
+              container.innerHTML = defaultHTML;
+              originalHTML = defaultHTML;
+              alert('로컬 파일의 코드 수정 사항이 감지되어 데이터베이스에 자동으로 새 버전이 저장 및 동기화되었습니다.');
+            } else {
+              container.innerHTML = data[0].html_content;
+            }
             editStatus.innerText = '보기 모드';
           }
           isSupabaseOnline = true;
