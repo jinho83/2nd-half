@@ -792,6 +792,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
       <span>이미지 저장</span>
     </button>
+    <button class="edit-btn" id="btnCopyImage" style="background-color: #6f42c1; color: white; display: flex; align-items: center; gap: 4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      <span>이미지 복사</span>
+    </button>
     <button class="edit-btn" id="btnCopyHTML" style="background-color: #ffc107; color: #212529; display: flex; align-items: center; gap: 4px;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
       <span>HTML 복사</span>
@@ -1199,6 +1203,62 @@
           console.error(err);
           btnCapture.querySelector('span').innerText = originalText;
           btnCapture.disabled = false;
+        });
+      });
+
+      // 이미지 복사 기능 추가
+      const btnCopyImage = document.getElementById('btnCopyImage');
+      btnCopyImage.addEventListener('click', () => {
+        const originalText = btnCopyImage.querySelector('span').innerText;
+        btnCopyImage.querySelector('span').innerText = '이미지 생성 중...';
+        btnCopyImage.disabled = true;
+        
+        // 복사 시 버튼 패널이 함께 찍히지 않도록 임시로 숨김
+        const editPanel = document.getElementById('editPanel');
+        if (editPanel) editPanel.style.display = 'none';
+        
+        html2canvas(document.querySelector('.report-container'), {
+          scale: 3, // 고해상도 3배율 스케일
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        }).then(canvas => {
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              throw new Error('Canvas blob generation failed');
+            }
+            try {
+              await navigator.clipboard.write([
+                new ClipboardItem({
+                  'image/png': blob
+                })
+              ]);
+              
+              // 캡쳐 완료 후 패널 복구
+              if (editPanel) editPanel.style.display = 'flex';
+              
+              btnCopyImage.querySelector('span').innerText = '복사 완료!';
+              btnCopyImage.style.backgroundColor = '#28a745';
+              setTimeout(() => {
+                btnCopyImage.querySelector('span').innerText = originalText;
+                btnCopyImage.style.backgroundColor = '#6f42c1';
+                btnCopyImage.disabled = false;
+              }, 2000);
+            } catch (clipboardErr) {
+              console.error('클립보드 이미지 쓰기 실패:', clipboardErr);
+              if (editPanel) editPanel.style.display = 'flex';
+              alert('클립보드에 이미지를 복사하는 데 실패했습니다. 보안 연결(HTTPS) 환경이 필요합니다.');
+              btnCopyImage.querySelector('span').innerText = originalText;
+              btnCopyImage.style.backgroundColor = '#6f42c1';
+              btnCopyImage.disabled = false;
+            }
+          }, 'image/png');
+        }).catch(err => {
+          if (editPanel) editPanel.style.display = 'flex';
+          alert('이미지 생성에 실패했습니다.');
+          console.error(err);
+          btnCopyImage.querySelector('span').innerText = originalText;
+          btnCopyImage.disabled = false;
         });
       });
     });
