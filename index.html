@@ -792,6 +792,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
       <span>이미지 저장</span>
     </button>
+    <button class="edit-btn" id="btnCopyHTML" style="background-color: #ffc107; color: #212529; display: flex; align-items: center; gap: 4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      <span>HTML 복사</span>
+    </button>
   </div>
 
   <script>
@@ -1064,6 +1068,77 @@
         if (isEditing && container.innerHTML !== originalHTML) {
           e.preventDefault();
           e.returnValue = ''; // 브라우저 표준 경고 띄움
+        }
+      });
+
+      // HTML 복사 기능 추가
+      const btnCopyHTML = document.getElementById('btnCopyHTML');
+      btnCopyHTML.addEventListener('click', async () => {
+        try {
+          const styleElement = document.querySelector('style');
+          const styleContent = styleElement ? styleElement.innerHTML : '';
+          
+          // 복사용 클론 생성
+          const clone = container.cloneNode(true);
+          
+          // 메타데이터 엘리먼트 제거
+          const meta = clone.querySelector('#document-metadata');
+          if (meta) meta.remove();
+          
+          // contenteditable 제거
+          clone.removeAttribute('contenteditable');
+          
+          // 왼쪽 정렬 보장 및 불필요 여백 제거용 인라인 스타일 부여
+          clone.style.margin = '0';
+          clone.style.padding = '0';
+          clone.style.textAlign = 'left';
+          clone.style.float = 'none';
+          clone.style.display = 'block';
+          
+          const htmlContent = `
+<div style="text-align: left; margin: 0; padding: 0; background-color: #ffffff; width: 100%; max-width: 768px;">
+  <style>
+    ${styleContent}
+  </style>
+  ${clone.outerHTML}
+</div>
+          `.trim();
+          
+          const plainText = container.innerText;
+          
+          const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+          const blobText = new Blob([plainText], { type: 'text/plain' });
+          
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobText
+            })
+          ]);
+          
+          // 피드백 효과
+          const originalText = btnCopyHTML.querySelector('span').innerText;
+          btnCopyHTML.querySelector('span').innerText = '복사 완료!';
+          btnCopyHTML.style.backgroundColor = '#28a745';
+          btnCopyHTML.style.color = '#ffffff';
+          setTimeout(() => {
+            btnCopyHTML.querySelector('span').innerText = originalText;
+            btnCopyHTML.style.backgroundColor = '#ffc107';
+            btnCopyHTML.style.color = '#212529';
+          }, 2000);
+        } catch (err) {
+          console.error('HTML 복사 실패:', err);
+          try {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = container.innerText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            alert('HTML 복사 API를 사용할 수 없는 환경입니다. (https 보안 연결이 필요할 수 있습니다.) 대신 본문 텍스트가 클립보드에 복사되었습니다.');
+          } catch (fallbackErr) {
+            alert('HTML 복사에 실패했습니다. 개발자 도구 콘솔을 확인해 주세요.');
+          }
         }
       });
 
