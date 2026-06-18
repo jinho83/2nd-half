@@ -741,7 +741,7 @@
       </tr>
 
     </table>
-    <div id="document-metadata" data-version="2026062100" style="display: none;"></div>
+    <div id="document-metadata" data-version="2026062110" style="display: none;"></div>
   </div>
 
   <!-- 편집 컨트롤 패널 -->
@@ -805,7 +805,7 @@
       const container = document.querySelector('.report-container');
       const defaultHTML = container.innerHTML;
       
-      const LOCAL_VERSION = 2026062100;
+      const LOCAL_VERSION = 2026062110;
       let supabaseClient = null;
       let isSupabaseOnline = false;
       
@@ -1057,6 +1057,22 @@
         const styleTag = clone.querySelector('style');
         if (styleTag) {
           let css = styleTag.innerHTML;
+          // 이메일 클라이언트 연동 시 상하 짤림 및 수직 정렬 오작동 방지 (flex 레이아웃 제거 및 body 기본 패딩 설정)
+          css = css.replace(/body\s*\{[^}]*\}/g, `body {
+      margin: 0;
+      padding: 10px 0;
+      background-color: #f3f4f6;
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      color: #333333;
+      line-height: 1.43;
+      display: block;
+      height: auto;
+      min-height: auto;
+    }`);
+          // 중앙 정렬 유지를 위해 report-container에 margin auto 설정 주입
+          css = css.replace(/\.report-container\s*\{/g, `.report-container {
+      margin: 0 auto;`);
+          
           css = css.replace('max-width: 768px;', 'max-width: 650px;');
           styleTag.innerHTML = css;
         }
