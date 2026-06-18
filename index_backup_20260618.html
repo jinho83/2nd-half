@@ -743,7 +743,7 @@
       </tr>
 
     </table>
-    <div id="document-metadata" data-version="2026062120" style="display: none;"></div>
+    <div id="document-metadata" data-version="2026062130" style="display: none;"></div>
   </div>
 
   <!-- 편집 컨트롤 패널 -->
@@ -807,7 +807,7 @@
       const container = document.querySelector('.report-container');
       const defaultHTML = container.innerHTML;
       
-      const LOCAL_VERSION = 2026062120;
+      const LOCAL_VERSION = 2026062130;
       let supabaseClient = null;
       let isSupabaseOnline = false;
       
@@ -1048,6 +1048,10 @@
         btnCapture.querySelector('span').innerText = '이미지 생성 중...';
         btnCapture.disabled = true;
         
+        // 캡쳐 시 버튼 패널이 겹쳐 찍히지 않도록 임시로 숨김
+        const editPanel = document.getElementById('editPanel');
+        if (editPanel) editPanel.style.display = 'none';
+        
         html2canvas(document.querySelector('.report-container'), {
           scale: 3, // 고해상도 3배율 스케일
           useCORS: true,
@@ -1059,6 +1063,9 @@
           link.href = canvas.toDataURL('image/png');
           link.click();
           
+          // 캡쳐 완료 후 패널 복구
+          if (editPanel) editPanel.style.display = 'flex';
+          
           btnCapture.querySelector('span').innerText = '저장 완료!';
           btnCapture.style.backgroundColor = '#1e7e34';
           setTimeout(() => {
@@ -1067,6 +1074,8 @@
             btnCapture.disabled = false;
           }, 2000);
         }).catch(err => {
+          // 에러 발생 시에도 패널 복구
+          if (editPanel) editPanel.style.display = 'flex';
           alert('이미지 저장에 실패했습니다. 개발자 도구 콘솔을 확인해 주세요.');
           console.error(err);
           btnCapture.querySelector('span').innerText = originalText;
