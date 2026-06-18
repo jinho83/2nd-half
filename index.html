@@ -1104,17 +1104,8 @@
 </div>
           `.trim();
           
-          const plainText = container.innerText;
-          
-          const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-          const blobText = new Blob([plainText], { type: 'text/plain' });
-          
-          await navigator.clipboard.write([
-            new ClipboardItem({
-              'text/html': blobHtml,
-              'text/plain': blobText
-            })
-          ]);
+          // 클립보드에 HTML 소스 코드(문자열)를 텍스트 형식으로 직접 복사
+          await navigator.clipboard.writeText(htmlContent);
           
           // 피드백 효과
           const originalText = btnCopyHTML.querySelector('span').innerText;
@@ -1129,15 +1120,16 @@
         } catch (err) {
           console.error('HTML 복사 실패:', err);
           try {
+            // navigator.clipboard가 작동하지 않는 구형 브라우저/보안 환경을 위한 fallback
             const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = container.innerText;
+            tempTextArea.value = htmlContent;
             document.body.appendChild(tempTextArea);
             tempTextArea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextArea);
-            alert('HTML 복사 API를 사용할 수 없는 환경입니다. (https 보안 연결이 필요할 수 있습니다.) 대신 본문 텍스트가 클립보드에 복사되었습니다.');
+            alert('클립보드 API 권한 문제로 브라우저 우회 방식을 사용하여 HTML 코드를 복사했습니다.');
           } catch (fallbackErr) {
-            alert('HTML 복사에 실패했습니다. 개발자 도구 콘솔을 확인해 주세요.');
+            alert('HTML 코드 복사에 실패했습니다. 개발자 도구 콘솔을 확인해 주세요.');
           }
         }
       });
