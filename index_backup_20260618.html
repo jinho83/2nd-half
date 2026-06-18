@@ -6,6 +6,8 @@
   <title>'26년 하반기 구매 혁신 및 제도 개편 (7.1. 부)</title>
   <!-- Supabase JS Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- html2canvas Library for high-res captures -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -741,7 +743,7 @@
       </tr>
 
     </table>
-    <div id="document-metadata" data-version="2026062110" style="display: none;"></div>
+    <div id="document-metadata" data-version="2026062120" style="display: none;"></div>
   </div>
 
   <!-- 편집 컨트롤 패널 -->
@@ -786,9 +788,9 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       <span>다운로드</span>
     </button>
-    <button class="edit-btn" id="btnCopy650" style="background-color: #28a745; color: white; display: flex; align-items: center; gap: 4px;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-      <span>650px 폭 복사</span>
+    <button class="edit-btn" id="btnCapture" style="background-color: #28a745; color: white; display: flex; align-items: center; gap: 4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      <span>이미지 저장</span>
     </button>
   </div>
 
@@ -805,7 +807,7 @@
       const container = document.querySelector('.report-container');
       const defaultHTML = container.innerHTML;
       
-      const LOCAL_VERSION = 2026062110;
+      const LOCAL_VERSION = 2026062120;
       let supabaseClient = null;
       let isSupabaseOnline = false;
       
@@ -1039,57 +1041,36 @@
         }
       });
 
-      // 650px 폭 복사 기능 추가
-      const btnCopy650 = document.getElementById('btnCopy650');
-      btnCopy650.addEventListener('click', () => {
-        const clone = document.documentElement.cloneNode(true);
-        const editPanel = clone.querySelector('#editPanel');
-        if (editPanel) editPanel.remove();
+      // 고해상도 이미지 저장 기능 추가
+      const btnCapture = document.getElementById('btnCapture');
+      btnCapture.addEventListener('click', () => {
+        const originalText = btnCapture.querySelector('span').innerText;
+        btnCapture.querySelector('span').innerText = '이미지 생성 중...';
+        btnCapture.disabled = true;
         
-        const scripts = clone.querySelectorAll('script');
-        scripts.forEach(s => s.remove());
-        
-        const cloneContainer = clone.querySelector('.report-container');
-        if (cloneContainer) {
-          cloneContainer.removeAttribute('contenteditable');
-        }
-        
-        const styleTag = clone.querySelector('style');
-        if (styleTag) {
-          let css = styleTag.innerHTML;
-          // 이메일 클라이언트 연동 시 상하 짤림 및 수직 정렬 오작동 방지 (flex 레이아웃 제거 및 body 기본 패딩 설정)
-          css = css.replace(/body\s*\{[^}]*\}/g, `body {
-      margin: 0;
-      padding: 10px 0;
-      background-color: #f3f4f6;
-      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
-      color: #333333;
-      line-height: 1.43;
-      display: block;
-      height: auto;
-      min-height: auto;
-    }`);
-          // 중앙 정렬 유지를 위해 report-container에 margin auto 설정 주입
-          css = css.replace(/\.report-container\s*\{/g, `.report-container {
-      margin: 0 auto;`);
+        html2canvas(document.querySelector('.report-container'), {
+          scale: 3, // 고해상도 3배율 스케일
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = '구매제도_개편_안내.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
           
-          css = css.replace('max-width: 768px;', 'max-width: 650px;');
-          styleTag.innerHTML = css;
-        }
-        
-        const finalHTML = '<!DOCTYPE html>\n' + clone.outerHTML;
-        
-        navigator.clipboard.writeText(finalHTML).then(() => {
-          const originalText = btnCopy650.querySelector('span').innerText;
-          btnCopy650.querySelector('span').innerText = '복사 완료!';
-          btnCopy650.style.backgroundColor = '#1e7e34';
+          btnCapture.querySelector('span').innerText = '저장 완료!';
+          btnCapture.style.backgroundColor = '#1e7e34';
           setTimeout(() => {
-            btnCopy650.querySelector('span').innerText = originalText;
-            btnCopy650.style.backgroundColor = '#28a745';
+            btnCapture.querySelector('span').innerText = originalText;
+            btnCapture.style.backgroundColor = '#28a745';
+            btnCapture.disabled = false;
           }, 2000);
         }).catch(err => {
-          alert('복사에 실패했습니다. 브라우저 보안 설정을 확인하시거나 직접 코드를 전체 선택해 복사해 주세요.');
+          alert('이미지 저장에 실패했습니다. 개발자 도구 콘솔을 확인해 주세요.');
           console.error(err);
+          btnCapture.querySelector('span').innerText = originalText;
+          btnCapture.disabled = false;
         });
       });
     });
