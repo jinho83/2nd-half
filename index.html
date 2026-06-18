@@ -1075,11 +1075,40 @@
       const btnCopyHTML = document.getElementById('btnCopyHTML');
       btnCopyHTML.addEventListener('click', async () => {
         try {
-          const styleElement = document.querySelector('style');
-          const styleContent = styleElement ? styleElement.innerHTML : '';
-          
           // 복사용 클론 생성
           const clone = container.cloneNode(true);
+          
+          // computed styles를 clone에 인라인으로 주입하는 재귀 함수 (이메일 클라이언트 호환성 극대화)
+          const inlineStyles = (src, dest) => {
+            const computedStyle = window.getComputedStyle(src);
+            const styleKeys = [
+              'color', 'background-color', 'font-size', 'font-weight', 'font-family', 
+              'line-height', 'text-align', 'border', 'border-top', 'border-bottom', 
+              'border-left', 'border-right', 'padding', 'padding-top', 'padding-bottom', 
+              'padding-left', 'padding-right', 'margin', 'margin-top', 'margin-bottom', 
+              'margin-left', 'margin-right', 'display', 'width', 'height', 'border-collapse', 
+              'border-spacing', 'vertical-align', 'border-radius', 'box-shadow', 'overflow',
+              'flex-shrink', 'flex-grow', 'word-break', 'text-decoration'
+            ];
+            
+            styleKeys.forEach(key => {
+              const value = computedStyle.getPropertyValue(key);
+              if (value) {
+                dest.style[key] = value;
+              }
+            });
+            
+            const srcChildren = Array.from(src.children);
+            const destChildren = Array.from(dest.children);
+            for (let i = 0; i < srcChildren.length; i++) {
+              if (destChildren[i]) {
+                inlineStyles(srcChildren[i], destChildren[i]);
+              }
+            }
+          };
+          
+          // 스타일 주입 실행
+          inlineStyles(container, clone);
           
           // 메타데이터 엘리먼트 제거
           const meta = clone.querySelector('#document-metadata');
@@ -1097,9 +1126,6 @@
           
           const htmlContent = `
 <div style="text-align: left; margin: 0; padding: 0; background-color: #ffffff; width: 100%; max-width: 768px;">
-  <style>
-    ${styleContent}
-  </style>
   ${clone.outerHTML}
 </div>
           `.trim();
