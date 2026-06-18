@@ -127,23 +127,21 @@
     /* 편집 모드 스타일 */
     .edit-controls {
       position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
       display: flex;
+      flex-direction: column;
       gap: 8px;
       z-index: 10000;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(8px);
-      padding: 8px 14px;
-      border-radius: 30px;
+      padding: 14px 10px;
+      border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       border: 1px solid rgba(0,0,0,0.08);
       align-items: center;
       transition: all 0.3s ease;
-      max-width: 95vw;
-      flex-wrap: wrap;
-      justify-content: center;
     }
     .edit-btn {
       padding: 6px 12px;
@@ -192,8 +190,15 @@
     /* 서식 툴바 스타일 */
     .format-toolbar {
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 6px;
+    }
+    .toolbar-divider {
+      width: 18px;
+      height: 1px;
+      background-color: #ddd;
+      margin: 2px 0;
     }
     .toolbar-btn {
       width: 28px;
@@ -248,6 +253,37 @@
       border-radius: 50%;
       background: conic-gradient(red, yellow, green, cyan, blue, magenta, red);
       border: 1px solid rgba(0,0,0,0.2);
+    }
+    
+    @media (max-width: 900px) {
+      .edit-controls {
+        position: fixed;
+        top: auto;
+        bottom: 20px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-direction: row;
+        padding: 8px 14px;
+        border-radius: 30px;
+        max-width: 95vw;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .format-toolbar {
+        flex-direction: row !important;
+        border-bottom: none !important;
+        border-right: 1px solid #ddd !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+        margin-right: 10px !important;
+        padding-right: 10px !important;
+      }
+      .format-toolbar .toolbar-divider {
+        width: 1px !important;
+        height: 18px !important;
+        margin: 0 2px !important;
+      }
     }
   </style>
 </head>
@@ -754,25 +790,25 @@
   <!-- 편집 컨트롤 패널 -->
   <div class="edit-controls" id="editPanel">
     <!-- 서식 툴바 -->
-    <div class="format-toolbar" id="formatToolbar" style="display: none; margin-right: 10px; padding-right: 10px; border-right: 1px solid #ddd; gap: 6px;">
+    <div class="format-toolbar" id="formatToolbar" style="display: none; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #ddd; gap: 6px;">
       <button class="toolbar-btn" id="btnBold" title="굵게"><b>B</b></button>
       <button class="toolbar-btn" id="btnUnderline" title="밑줄"><u>U</u></button>
       <button class="toolbar-btn" id="btnItalic" title="기울임" style="font-style: italic;">I</button>
-      <div style="width: 1px; height: 18px; background-color: #ddd; margin: 0 2px;"></div>
+      <div class="toolbar-divider"></div>
       <button class="toolbar-btn" id="btnAlignLeft" title="왼쪽 정렬">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
       </button>
       <button class="toolbar-btn" id="btnAlignCenter" title="가운데 정렬">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
       </button>
-      <div style="width: 1px; height: 18px; background-color: #ddd; margin: 0 2px;"></div>
+      <div class="toolbar-divider"></div>
       <button class="toolbar-btn" id="btnBulletList" title="글머리 기호">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
       </button>
       <button class="toolbar-btn" id="btnNumList" title="번호 매기기">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6H5v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
       </button>
-      <div style="width: 1px; height: 18px; background-color: #ddd; margin: 0 2px;"></div>
+      <div class="toolbar-divider"></div>
       <div class="color-picker-wrapper" title="글자 색상">
         <div class="color-icon"></div>
         <input type="color" id="textColorPicker">
