@@ -864,8 +864,34 @@
               originalHTML = defaultHTML;
               console.log('로컬 소스코드 업데이트 감지: 데이터베이스 버전을 최신화했습니다.');
             } else {
-              // DB 버전이 더 최신이거나 같은 경우 DB 내용을 적용
-              container.innerHTML = dbHTML;
+              // DB 버전이 더 최신이거나 같은 경우, 내용이 다르면 사용자에게 선택권을 제공
+              const cleanHTML = (html) => html.replace(/\s+/g, ' ').trim();
+              if (cleanHTML(defaultHTML) !== cleanHTML(dbHTML)) {
+                const useLocal = confirm('로컬 파일의 코드 내용과 데이터베이스(Supabase)에 저장된 내용에 차이가 있습니다.\n\n[확인]: 로컬 코드 수정본을 데이터베이스에 새로 반영하고 사용합니다.\n[취소]: 데이터베이스에 저장된 기존 내용을 불러옵니다.');
+                if (useLocal) {
+                  const nextVersion = Math.max(LOCAL_VERSION, dbVersion) + 1;
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(defaultHTML, 'text/html');
+                  const meta = doc.querySelector('#document-metadata');
+                  if (meta) {
+                    meta.setAttribute('data-version', nextVersion.toString());
+                  }
+                  const updatedHTML = doc.body.innerHTML;
+                  
+                  await supabaseClient
+                    .from('document_history')
+                    .insert({ modifier_name: 'System (User Selected Local)', html_content: updatedHTML });
+                  
+                  container.innerHTML = updatedHTML;
+                  originalHTML = updatedHTML;
+                } else {
+                  container.innerHTML = dbHTML;
+                  originalHTML = dbHTML;
+                }
+              } else {
+                container.innerHTML = dbHTML;
+                originalHTML = dbHTML;
+              }
             }
             editStatus.innerText = '보기 모드';
           }
