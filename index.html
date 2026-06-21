@@ -1273,8 +1273,8 @@
           logging: false,
           backgroundColor: '#ffffff'
         }).then(canvas => {
-          // PNG 대신 JPEG 포맷을 사용하고 퀄리티를 0.8로 설정하여 용량을 획기적으로 감축
-          const imgData = canvas.toDataURL('image/jpeg', 0.8);
+          // JPEG 포맷을 사용하고 퀄리티를 1.0(100%)으로 설정
+          const imgData = canvas.toDataURL('image/jpeg', 1.0);
           
           // A4 비율에 맞춰서 PDF 생성
           const imgWidth = 210; // mm (A4 가로)
