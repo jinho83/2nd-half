@@ -1276,27 +1276,19 @@
           // JPEG 포맷을 사용하고 퀄리티를 1.0(100%)으로 설정
           const imgData = canvas.toDataURL('image/jpeg', 1.0);
           
-          // A4 비율에 맞춰서 PDF 생성
-          const imgWidth = 210; // mm (A4 가로)
-          const pageHeight = 297; // mm (A4 세로)
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          let heightLeft = imgHeight;
+          // 콘텐츠의 원본 비율에 맞춰 PDF 크기를 동적으로 결정 (가로 210mm 기준)
+          const imgWidth = 210; // mm
+          const imgHeight = (canvas.height * imgWidth) / canvas.width; // mm
           
           const { jsPDF } = window.jspdf;
-          const doc = new jsPDF('p', 'mm', 'a4');
-          let position = 0;
+          // 세로로 자르지 않고 원본 세로 크기 그대로 한 페이지에 이어서 생성
+          const doc = new jsPDF({
+            orientation: imgWidth > imgHeight ? 'l' : 'p',
+            unit: 'mm',
+            format: [imgWidth, imgHeight]
+          });
           
-          // 첫 페이지 추가 (JPEG 형식과 FAST 압축옵션 사용)
-          doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-          heightLeft -= pageHeight;
-          
-          // 여러 페이지로 나뉘는 경우
-          while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            doc.addPage();
-            doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-            heightLeft -= pageHeight;
-          }
+          doc.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
           
           doc.save('구매제도_개편_안내.pdf');
           
