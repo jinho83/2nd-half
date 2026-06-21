@@ -1268,12 +1268,13 @@
         if (editPanel) editPanel.style.display = 'none';
         
         html2canvas(document.querySelector('.report-container'), {
-          scale: 3, // 고해상도 3배율 스케일
+          scale: 2, // 충분히 선명한 고해상도 2배율 스케일
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff'
         }).then(canvas => {
-          const imgData = canvas.toDataURL('image/png');
+          // PNG 대신 JPEG 포맷을 사용하고 퀄리티를 0.8로 설정하여 용량을 획기적으로 감축
+          const imgData = canvas.toDataURL('image/jpeg', 0.8);
           
           // A4 비율에 맞춰서 PDF 생성
           const imgWidth = 210; // mm (A4 가로)
@@ -1285,15 +1286,15 @@
           const doc = new jsPDF('p', 'mm', 'a4');
           let position = 0;
           
-          // 첫 페이지 추가
-          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          // 첫 페이지 추가 (JPEG 형식과 FAST 압축옵션 사용)
+          doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
           heightLeft -= pageHeight;
           
           // 여러 페이지로 나뉘는 경우
           while (heightLeft >= 0) {
             position = heightLeft - imgHeight;
             doc.addPage();
-            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
             heightLeft -= pageHeight;
           }
           
