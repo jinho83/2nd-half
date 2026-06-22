@@ -284,10 +284,66 @@
         margin-right: 10px !important;
         padding-right: 10px !important;
       }
+      }
       .format-toolbar .toolbar-divider {
         width: 1px !important;
         height: 18px !important;
         margin: 0 2px !important;
+      }
+    }
+
+    /* 프린트 전용 스타일 추가 */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: auto !important;
+        display: block !important;
+      }
+      
+      .edit-controls, #editPanel {
+        display: none !important; /* 인쇄 시 제어판 숨김 */
+      }
+      
+      .report-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+
+      .report-table {
+        width: 100% !important;
+        table-layout: fixed !important;
+      }
+
+      /* 테이블 행 잘림 방지 */
+      .report-table tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      /* 내부 테이블 및 리스트 아이템 잘림 방지 */
+      .comparison-table, .eval-table, ul li, .bullet-item {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      /* 헤더 등 특정 섹션에서 페이지 나뉨 방지 */
+      .section-title, .item-title {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      
+      /* 인쇄 용지 너비에 맞게 문서 가로폭 전체 자동 피팅 */
+      @page {
+        size: A4 portrait;
+        margin: 15mm 12mm 15mm 12mm;
       }
     }
   </style>
@@ -850,6 +906,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
       <span>HTML 복사</span>
     </button>
+    <button class="edit-btn" id="btnPrint" style="background-color: #17a2b8; color: white; display: flex; align-items: center; gap: 4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      <span>문서 출력</span>
+    </button>
   </div>
 
   <script>
@@ -857,6 +917,7 @@
       const btnToggleEdit = document.getElementById('btnToggleEdit');
       const btnSave = document.getElementById('btnSave');
       const btnDownload = document.getElementById('btnDownload');
+      const btnPrint = document.getElementById('btnPrint');
       const editStatus = document.getElementById('editStatus');
       const editPanel = document.getElementById('editPanel');
       const formatToolbar = document.getElementById('formatToolbar');
@@ -1003,6 +1064,7 @@
           btnToggleEdit.style.backgroundColor = '#6c757d';
           btnSave.style.display = 'flex';
           btnDownload.style.display = 'flex';
+          btnPrint.style.display = 'none'; // 편집 중일 땐 문서출력 숨김
           formatToolbar.style.display = 'flex';
           editStatus.innerText = '편집 모드';
           editStatus.style.color = '#d9534f';
@@ -1029,6 +1091,7 @@
         btnToggleEdit.style.backgroundColor = '#1a4f8c';
         btnSave.style.display = 'none';
         btnDownload.style.display = 'none';
+        btnPrint.style.display = 'flex'; // 보기모드 진입 시 문서출력 다시 보임
         formatToolbar.style.display = 'none';
         editStatus.innerText = isSupabaseOnline ? '보기 모드' : '로컬 모드';
         editStatus.style.color = '#666';
@@ -1366,6 +1429,11 @@
           btnCopyImage.querySelector('span').innerText = originalText;
           btnCopyImage.disabled = false;
         });
+      });
+
+      // 문서 출력 기능 추가
+      btnPrint.addEventListener('click', () => {
+        window.print();
       });
     });
   </script>
