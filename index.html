@@ -305,8 +305,15 @@
       }
       
       /* 인쇄 시 조작 패널, 버튼, 보기모드 안내 텍스트 등 모든 컨트롤 요소 숨김 */
-      .edit-controls, #editPanel, .edit-btn, .edit-status, #editStatus, .format-toolbar {
+      .edit-controls, #editPanel, .edit-btn, .edit-status, #editStatus, .format-toolbar, 
+      [id="editPanel"], [id="editStatus"], [class*="edit"] {
         display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       
       /* 본문 가로폭을 현재 보는 그대로(768px) 고정하고, A4 용지 너비에 맞추기 위해 CSS transform scale 적용 */
