@@ -331,14 +331,14 @@
         table-layout: fixed !important;
       }
 
-      /* 테이블 행 잘림 방지 */
+      /* 테이블 행 잘림 방지는 설정하지 않아 크롬 인쇄 시 첫 페이지 내부에 큰 tr이 잘리지 않고 채워지도록 함 */
       .report-table tr {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
       }
 
-      /* 내부 테이블 및 리스트 아이템 잘림 방지 */
-      .comparison-table, .eval-table, ul li, .bullet-item {
+      /* 내부 테이블 및 리스트 아이템, 단락 잘림 방지 */
+      .comparison-table, .eval-table, ul li, .bullet-item, .section-title, .item-title, .note-box {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
       }
