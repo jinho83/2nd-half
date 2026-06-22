@@ -299,22 +299,29 @@
         padding: 0 !important;
         margin: 0 !important;
         min-height: auto !important;
-        display: block !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
       }
       
-      .edit-controls, #editPanel {
-        display: none !important; /* 인쇄 시 제어판 숨김 */
+      /* 인쇄 시 조작 패널, 버튼, 보기모드 안내 텍스트 등 모든 컨트롤 요소 숨김 */
+      .edit-controls, #editPanel, .edit-btn, .edit-status, #editStatus, .format-toolbar {
+        display: none !important;
       }
       
+      /* 본문 가로폭을 현재 보는 그대로(768px) 고정하고, A4 용지 너비에 맞추기 위해 CSS transform scale 적용 */
       .report-container {
-        width: 100% !important;
-        max-width: 100% !important;
+        width: 768px !important;
+        min-width: 768px !important;
+        max-width: 768px !important;
         box-shadow: none !important;
         border: none !important;
         border-radius: 0 !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         padding: 0 !important;
         overflow: visible !important;
+        transform: scale(0.96); /* A4 portrait 너비(여백 감안 실 가용너비 약 180~186mm)에 맞게 피팅 */
+        transform-origin: top center;
       }
 
       .report-table {
@@ -340,10 +347,9 @@
         break-after: avoid !important;
       }
       
-      /* 인쇄 용지 너비에 맞게 문서 가로폭 전체 자동 피팅 */
       @page {
         size: A4 portrait;
-        margin: 15mm 12mm 15mm 12mm;
+        margin: 10mm 5mm 10mm 5mm;
       }
     }
   </style>
