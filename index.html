@@ -298,9 +298,7 @@
         padding: 0 !important;
         margin: 0 !important;
         min-height: auto !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
+        display: block !important;
       }
       
       /* 인쇄 시 조작 패널, 버튼, 보기모드 안내 텍스트 등 모든 컨트롤 요소 숨김 */
@@ -315,7 +313,7 @@
         padding: 0 !important;
       }
       
-      /* 본문 가로폭을 현재 보는 그대로(768px) 고정하고, A4 용지 너비에 맞추기 위해 CSS transform scale 적용 */
+      /* 본문 가로폭을 현재 보는 그대로(768px) 고정하고 브라우저 프린터 드라이버가 자동으로 용지폭에 맞춰 축소하도록 설정 */
       .report-container {
         width: 768px !important;
         min-width: 768px !important;
@@ -326,8 +324,6 @@
         margin: 0 auto !important;
         padding: 0 !important;
         overflow: visible !important;
-        transform: scale(0.96); /* A4 portrait 너비(여백 감안 실 가용너비 약 180~186mm)에 맞게 피팅 */
-        transform-origin: top center;
       }
 
       .report-table {
