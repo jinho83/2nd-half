@@ -326,8 +326,13 @@
         overflow: visible !important;
       }
 
-      .report-table {
+      .report-table, .report-table > tbody, .report-table > tr, .report-table > tbody > tr, .report-table > tr > td, .report-table > tbody > tr > td {
+        display: block !important;
         width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .report-table {
         table-layout: fixed !important;
       }
 
@@ -618,7 +623,10 @@
                 <span class="bullet">-</span>
                 <span class="bullet-content">
                   <span class="bullet-label">효과 :</span>
-                  <span>우수업체와 열위업체 변별력 강화를 통한 협력사 POOL 정예화 <span style="font-size: 0.85em; opacity: 0.8;">('26.E 공사 등록업체 30%↓)</span></span>
+                  <span>
+                    <div>우수업체와 열위업체 변별력 강화를 통한 협력사 POOL 정예화</div>
+                    <div style="margin-top: 2px;" class="sub-info">*공사 등록업체 '25년 843개사 &rarr; 26.E 600여개사로 30%↓</div>
+                  </span>
                 </span>
               </div>
             </li>
@@ -755,7 +763,7 @@
                 <span class="bullet-content">
                   <span class="bullet-label">내용 :</span>
                   <span>
-                    AI Agent로 <strong>핵심 키워드를 입력</strong>하면 나라장터 등 <strong>공공입찰 데이터와 실시간 통합 매칭</strong>하여 <strong>AI가 자동 검색 후 최적업체를 E-pro에 전송</strong><br>
+                    AI Agent로 <strong>핵심 키워드를 입력</strong>하면 나라장터 등 <strong>공공입찰 데이터와 실시간 통합 매칭</strong>하여 <strong>AI가 자동 검색 후 최적업체를 E-pro에 전송</strong> <span class="sub-info" style="font-weight: normal; margin-left: 2px;">*AX추진반 협업</span><br>
                     <span class="sub-info">※ URL : <a href="http://searchvendor.apps.poscoenc.com/vendors" target="_blank" style="color: #666; text-decoration: underline;">searchvendor.apps.poscoenc.com/vendors</a> (AX Store 등록)</span>
                   </span>
                 </span>
@@ -782,7 +790,7 @@
                 <span class="bullet-content" style="flex-direction: column;">
                   <div style="display: flex; width: 100%;">
                     <span class="bullet-label" style="flex-shrink: 0;">내용 :</span>
-                    <span>10개년 발주 DATA 분석 기반 <strong>건축 PJT 표준발주일정 자동화 구축</strong></span>
+                    <span>10개년 발주 DATA 분석 기반 <strong>건축 PJT 표준발주일정 자동화 구축</strong> <span class="sub-info" style="font-weight: normal; margin-left: 2px;">*R&D센터 협업</span></span>
                   </div>
                   <table class="comparison-table" style="margin-top: 6px; width: 100%;">
                     <thead>
@@ -828,7 +836,7 @@
                 <span class="bullet-content">
                   <span class="bullet-label">내용 :</span>
                   <span>
-                    계약&middot;보증&middot;기성&middot;협력사 리스크 <strong>데이터를 즉시 검색&middot;분석하는 대화형 AI 체계 구축</strong><br>(기존 IT 부서 데이터 추출 의뢰 구조 탈피)<br>
+                    계약&middot;보증&middot;기성&middot;협력사 리스크 <strong>데이터를 즉시 검색&middot;분석하는 대화형 AI 체계 구축</strong><br>(기존 IT 부서 데이터 추출 의뢰 구조 탈피) <span class="sub-info" style="font-weight: normal; margin-left: 2px;">*AX추진반 협업</span><br>
                     <span class="sub-info">※ URL : <a href="https://aias-epro.apps.poscoenc.com" target="_blank" style="color: #666; text-decoration: underline;">https://aias-epro.apps.poscoenc.com</a> (AX Store 등록)</span>
                   </span>
                 </span>
